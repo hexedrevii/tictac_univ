@@ -1,0 +1,3 @@
+[submodule "lib/marshmallow"]
+	path = lib/marshmallow
+	url = https://github.com/hexedrevii/marshmallow
