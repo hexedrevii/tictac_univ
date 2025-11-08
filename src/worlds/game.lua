@@ -113,14 +113,24 @@ function game:init()
       self:__handleTurnChange(idx)
     end
   end, true)
+
   self.moveTimer:stop()
+
+  self.startTimer = Timer.new(0.25, function ()
+    self.gameStarted = true
+  end, true)
 
   self.gameEnded = false
   self.isDraw = false
 
   self.endButtons = ButtonController.new()
-  self.endButtons:addNewButton(-100, -100, "retry", function ()
-    print('piss')
+  self.endButtons:addNewButton(5, -100, "retry", function()
+    global.world:set(game)
+  end)
+
+  self.endButtons:addNewButton(5, -100, "main menu", function()
+    local menu = require 'src.worlds.menu'
+    global.world:set(menu)
   end)
 end
 
@@ -258,9 +268,18 @@ function game:update(delta)
   self.camera:scaleWindow(1920, 1080)
   self:__centreCamera()
 
+  self.startTimer:update(delta)
+
+  local offset = 50
+  for _, button in ipairs(self.endButtons.elements) do
+    local w, h = love.graphics.getDimensions()
+    button.y = h - offset
+    offset = offset + 60
+  end
+
   if self.gameEnded then
-    local mx, my = self.camera:mouseToWorld()
-    self.endButtons:update(mx, my, global.font)
+    local mx, my = love.mouse.getPosition()
+    self.endButtons:update(mx, my, global.fontBig)
 
     return
   end
@@ -271,7 +290,7 @@ function game:update(delta)
 
   self.moveTimer:update(delta)
 
-  if self.turn == self.playerIs then
+  if self.turn == self.playerIs and self.gameStarted then
     self:__collides()
   end
 end
@@ -328,7 +347,7 @@ function game:draw()
     local turns = 'took ' .. self.totalTurns .. ' turns'
     love.graphics.print(turns, self:putMiddle(turns, global.font, ww), y)
 
-    self.endButtons:draw(global.font)
+    self.endButtons:draw(global.fontBig)
   end
 end
 
