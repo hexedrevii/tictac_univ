@@ -7,7 +7,9 @@ function button.new(x, y, text, callback)
     text = text,
     callback = callback,
 
-    active = false
+    active = false,
+
+    colour = {1,1,1}
   }
 
   return setmetatable(btn, button)

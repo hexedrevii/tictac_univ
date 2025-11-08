@@ -1,11 +1,12 @@
 local globals = require 'src.global'
 local game    = require 'src.worlds.game'
+local menu    = require 'src.worlds.menu'
 
 
 function love.load()
   globals.input:pushKeymap('uiaccept', nil, nil, 1)
 
-  globals.world:set(game)
+  globals.world:set(menu)
 end
 
 function love.update(delta)
